@@ -1,0 +1,32 @@
+version: '3'
+
+volumes:
+    nwvol:
+
+networks:
+    nwnet:
+
+services:
+    nwdb:
+        image: testdb1
+        build:
+            context: ./database
+        environment:
+        - MYSQL_ROOT_PASSWORD=changeit
+        networks:
+        - nwnet
+        volumes:
+        - nwvol:/vaar/lib/mysql
+    nwapp:
+        image: testsvr1
+        build:
+            context: ./server
+        environment:
+        - DB_HOST=nwdb
+        - DB_PORT=3306
+        - DB_USER=root
+        - DB_PASSWORD=changeit
+        networks:
+        - nwnet
+        ports: 8080:3000
+        
