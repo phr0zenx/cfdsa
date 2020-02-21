@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: weather-deploy
+    namespace: default
+    labels:
+        name: weather
+        version: "v1"
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            name: weather-pod
+    template:
+        metadata:
+            name: weather-pod
+            labels:
+                - name: weather-pod
+        spec:
+            containers:
+                - name: weather-container
+                  image: weather
+                  imagePullPolicy: Always
+                  envFrom:
+                    - configMapRef:
+                        name: weather-configmap
+                  ports:
+                    - name: http
+                      containerPort: 3000
